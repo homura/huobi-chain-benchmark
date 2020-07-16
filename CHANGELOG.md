@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/nervosnetwork/muta-benchmark/compare/v0.2.1...v0.2.2) (2020-07-14)
+
+
+### Features
+
+* update muta-sdk ([1d443ca](https://github.com/nervosnetwork/muta-benchmark/commit/1d443caffc9cad61edbade684d9d06b4e9c94afc))
+* update sdk ([7a2acb9](https://github.com/nervosnetwork/muta-benchmark/commit/7a2acb9157c674db7ab7ff522a64bf4e15171744))
+* update sdk version to 0.10 ([1815245](https://github.com/nervosnetwork/muta-benchmark/commit/1815245087ab981bc6c90cf019f1235b9a7ddd34))
+
+
+### Bug Fixes
+
+* fix get balance error ([a2c4db3](https://github.com/nervosnetwork/muta-benchmark/commit/a2c4db3e60ca115ac857d9c6d31b6b0b6509a2b5))
+
+### [0.2.1](https://github.com/homura/muta-benchmark/compare/v0.1.7...v0.2.1) (2020-06-02)
+
+## [0.2.0](https://github.com/homura/muta-benchmark/compare/v0.1.4...v0.2.0) (2020-03-13)
+
+
+### Features
+
+* supported precision for AssetService ([a0bf45c](https://github.com/homura/muta-benchmark/commit/a0bf45c6a4d6bbe78b7ee7a21cc75880d4749c30))
+
 ### [0.1.4](https://github.com/homura/muta-benchmark/compare/v0.1.3...v0.1.4) (2020-03-10)
 
 

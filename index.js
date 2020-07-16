@@ -3,7 +3,7 @@
 const program = require("commander");
 const ora = require("ora");
 const cluster = require("cluster");
-const { utils } = require("muta-sdk");
+const { utils } = require("@mutadev/muta-sdk");
 const { runMain, runWorker } = require("./bench");
 const logger = require("./logger");
 const { AssetBenchProducer } = require("./BenchProducer");
@@ -43,7 +43,7 @@ const { args } = program
   .parse(process.argv);
 
 const opts = program.opts();
-const url = args[0] || "http://127.0.0.1:8000/graphql";
+const url = args.length ? args : "http://127.0.0.1:8000/graphql";
 
 opts.url = url;
 
@@ -92,7 +92,8 @@ async function run() {
         to: assetBenchProducer.to,
         timeout: assetBenchProducer.timeout,
         chainId: assetBenchProducer.chainId,
-        privateKey: assetBenchProducer.account._privateKey.toString("hex")
+        privateKey: assetBenchProducer.account._privateKey.toString("hex"),
+        sender: assetBenchProducer.account.address
       }),
       OPTIONS: JSON.stringify(opts)
     });
