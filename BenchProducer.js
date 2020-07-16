@@ -1,4 +1,5 @@
-const { Muta, AssetService, utils } = require("muta-sdk");
+const { Muta, utils } = require("@mutadev/muta-sdk");
+const { AssetService } = require("@mutadev/service");
 const randomBytes = require("randombytes");
 
 const query = `mutation ( $inputRaw: InputRawTransaction! $inputEncryption: InputTransactionEncryption! ) { sendTransaction(inputRaw: $inputRaw, inputEncryption: $inputEncryption) }`;
@@ -17,7 +18,7 @@ class AssetBench {
     const muta = new Muta({
       chainId,
       timeoutGap: gap,
-      endpoint: url
+      endpoint: Array.isArray(url) ? url[0] : url,
     });
 
     this.client = muta.client();
@@ -33,12 +34,14 @@ class AssetBench {
   }
 
   async createAsset() {
-    const asset = await this.service.create_asset({
+    const asset = await this.service.write.create_asset({
       supply: 99999999,
-      symbol: Math.random().toString(),
-      name: Math.random().toString()
+      symbol: "M" + (Math.random() * 1e8).toString().substring(0, 4),
+      name: "M" + (Math.random() * 1e8).toString().substring(0, 4),
+      precision: 0,
+      relayable: false
     });
-    this.assetId = asset.response.ret.id;
+    this.assetId = asset.response.response.succeedData.id;
     await this.client.waitForNextNBlock(1);
     return asset;
   }
@@ -51,12 +54,12 @@ class AssetBench {
   async start() {
     this.startTime = Date.now();
     this.startBlock = await this.client.getLatestBlockHeight();
-    this.startBalance = await this.service
+    this.startBalance = await this.service.read
       .get_balance({
         asset_id: this.assetId,
         user: this.account.address
       })
-      .then(res => res.ret.balance);
+      .then(res => res.succeedData.balance);
   }
 
   async end() {
@@ -65,12 +68,12 @@ class AssetBench {
     await this.client.waitForNextNBlock(1);
 
     this.endBlock = await this.client.getLatestBlockHeight();
-    this.endBalance = await this.service
+    this.endBalance = await this.service.read
       .get_balance({
         asset_id: this.assetId,
         user: this.account.address
       })
-      .then(res => res.ret.balance);
+      .then((res) => res.succeedData.balance);
 
     const blocks = {};
     for (let height = this.startBlock; height <= this.endBlock; height++) {
@@ -104,12 +107,13 @@ class AssetBench {
       {
         serviceName: "asset",
         method: "transfer",
-        payload: JSON.stringify({ asset_id: assetId, to: to, value: 1 }),
+        payload: JSON.stringify({ asset_id: assetId, to: to, value: 1, memo: "hello" }),
         timeout: timeout,
         nonce: `0x${randomBytes(32).toString("hex")}`,
         chainId: `${chainId}`,
         cyclesPrice: "0x01",
-        cyclesLimit: "0x5208"
+        cyclesLimit: "0xfffffff",
+        sender: this.account.address
       },
       this.account._privateKey
     );
