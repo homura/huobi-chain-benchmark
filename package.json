@@ -1,5 +1,5 @@
 {
-  "name": "muta-bench",
+  "name": "huobi-chain-bench",
   "version": "0.2.2",
   "description": "Muta benchmark",
   "main": "index.js",
@@ -15,8 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "@homura/autocannon": "^4.7.0-alpha.0",
-    "@mutadev/muta-sdk": "0.2.0-dev+pr315.0",
-    "@mutadev/service": "0.2.0-dev+pr315.0",
+    "@mutadev/muta-sdk": "0.2.0-pr374.3",
+    "@mutadev/service": "0.2.0-pr374.3",
     "cli-table3": "^0.5.1",
     "commander": "^3.0.2",
     "debug": "^4.1.1",
@@ -25,5 +25,8 @@
     "randombytes": "^2.1.0",
     "rlp": "^2.2.3",
     "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.5"
   }
 }

@@ -1,6 +1,6 @@
-const { Muta, utils } = require("@mutadev/muta-sdk");
-const { AssetService } = require("@mutadev/service");
-const randomBytes = require("randombytes");
+const { Muta, utils } = require('@mutadev/muta-sdk');
+const { AssetService } = require('@mutadev/service');
+const randomBytes = require('randombytes');
 
 const query = `mutation ( $inputRaw: InputRawTransaction! $inputEncryption: InputTransactionEncryption! ) { sendTransaction(inputRaw: $inputRaw, inputEncryption: $inputEncryption) }`;
 
@@ -28,7 +28,7 @@ class AssetBench {
 
     this.chainId = chainId;
 
-    this.to = "0x" + randomBytes(20).toString("hex");
+    this.to = Muta.accountFromPrivateKey(randomBytes(32)).address;
     this.receiver = receiver;
     this.gap = gap;
   }
@@ -36,10 +36,12 @@ class AssetBench {
   async createAsset() {
     const asset = await this.service.write.create_asset({
       supply: 99999999,
-      symbol: "M" + (Math.random() * 1e8).toString().substring(0, 4),
-      name: "M" + (Math.random() * 1e8).toString().substring(0, 4),
+      symbol: 'M' + (Math.random() * 1e8).toString().substring(0, 4),
+      name: 'M' + (Math.random() * 1e8).toString().substring(0, 4),
       precision: 0,
-      relayable: false
+      relayable: false,
+      admin: this.account.address,
+      init_mints: [{ addr: this.account.address, balance: 99999999 }],
     });
     this.assetId = asset.response.response.succeedData.id;
     await this.client.waitForNextNBlock(1);
@@ -57,9 +59,9 @@ class AssetBench {
     this.startBalance = await this.service.read
       .get_balance({
         asset_id: this.assetId,
-        user: this.account.address
+        user: this.account.address,
       })
-      .then(res => res.succeedData.balance);
+      .then((res) => res.succeedData.balance);
   }
 
   async end() {
@@ -71,18 +73,20 @@ class AssetBench {
     this.endBalance = await this.service.read
       .get_balance({
         asset_id: this.assetId,
-        user: this.account.address
+        user: this.account.address,
       })
       .then((res) => res.succeedData.balance);
 
     const blocks = {};
     for (let height = this.startBlock; height <= this.endBlock; height++) {
-      const res = await this.rawClient.getBlock({ height: utils.toHex(height) });
+      const res = await this.rawClient.getBlock({
+        height: utils.toHex(height),
+      });
 
       blocks[height] = {
         round: Number(res.getBlock.header.proof.round),
         timeStamp: hexToTimestamp(res.getBlock.header.timestamp),
-        transactionsCount: res.getBlock.orderedTxHashes.length
+        transactionsCount: res.getBlock.orderedTxHashes.length,
       };
     }
 
@@ -92,7 +96,7 @@ class AssetBench {
       blockUsage: this.endBlock - this.startBlock - 1,
       transferProcessed: this.startBalance - this.endBalance,
 
-      blocks
+      blocks,
     };
   }
 
@@ -103,24 +107,34 @@ class AssetBench {
     const assetId = this.assetId;
     const to = this.to;
 
-    const variables = utils.signTransaction(
+    const signed = utils.signTransaction(
       {
-        serviceName: "asset",
-        method: "transfer",
-        payload: JSON.stringify({ asset_id: assetId, to: to, value: 1, memo: "hello" }),
+        serviceName: 'asset',
+        method: 'transfer',
+        payload: JSON.stringify({
+          asset_id: assetId,
+          to: to,
+          value: 1,
+          memo: 'hello',
+        }),
         timeout: timeout,
-        nonce: `0x${randomBytes(32).toString("hex")}`,
+        nonce: `0x${randomBytes(32).toString('hex')}`,
         chainId: `${chainId}`,
-        cyclesPrice: "0x01",
-        cyclesLimit: "0xfffffff",
-        sender: this.account.address
+        cyclesPrice: '0x01',
+        cyclesLimit: '0xfffffff',
+        sender: this.account.address,
       },
       this.account._privateKey
     );
 
+    const variables = {
+      inputRaw: utils.separateOutRawTransaction(signed),
+      inputEncryption: utils.separateOutEncryption(signed),
+    };
+
     return JSON.stringify({
       query,
-      variables
+      variables,
     });
   }
 }
