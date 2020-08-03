@@ -23,6 +23,7 @@ class AssetBench {
 
     this.client = muta.client();
     this.account = Muta.accountFromPrivateKey(pk);
+    this.privateKey = pk;
     this.rawClient = this.client.getRawClient();
     this.service = new AssetService(this.client, this.account);
 
@@ -124,7 +125,7 @@ class AssetBench {
         cyclesLimit: '0xfffffff',
         sender: this.account.address,
       },
-      this.account._privateKey
+      utils.toBuffer(this.privateKey)
     );
 
     const variables = {
