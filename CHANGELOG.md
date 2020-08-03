@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/homura/huobi-chain-benchmark/compare/v0.2.1...v0.2.3) (2020-08-03)
+
+
+### Features
+
+* adapting huobi-chain@0.4.0-alpha ([361683d](https://github.com/homura/huobi-chain-benchmark/commit/361683d92de359c54cb573d3dedea0ea6e649981))
+* supported miner in asset service ([eb9d60a](https://github.com/homura/huobi-chain-benchmark/commit/eb9d60ab9b447a2d02181fa5be523cf81991dc0c))
+* update muta-sdk ([1d443ca](https://github.com/homura/huobi-chain-benchmark/commit/1d443caffc9cad61edbade684d9d06b4e9c94afc))
+* update sdk ([7a2acb9](https://github.com/homura/huobi-chain-benchmark/commit/7a2acb9157c674db7ab7ff522a64bf4e15171744))
+* update sdk version to 0.10 ([1815245](https://github.com/homura/huobi-chain-benchmark/commit/1815245087ab981bc6c90cf019f1235b9a7ddd34))
+* update to huobi-chain@0.5.0-beta.1 ([7bd570a](https://github.com/homura/huobi-chain-benchmark/commit/7bd570ac1f5322d6d10d67a2607e5c26ca10389d))
+
+
+### Bug Fixes
+
+* fix get balance error ([a2c4db3](https://github.com/homura/huobi-chain-benchmark/commit/a2c4db3e60ca115ac857d9c6d31b6b0b6509a2b5))
+
 ### [0.2.2](https://github.com/nervosnetwork/muta-benchmark/compare/v0.2.1...v0.2.2) (2020-07-14)
 
 
