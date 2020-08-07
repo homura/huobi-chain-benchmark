@@ -1,5 +1,9 @@
 # Muta benchmark
 
+## DEPRECATED
+
+move to https://github.com/HuobiGroup/huobi-chain-benchmark
+
 ## Requirement
 
 - NodeJS >= 10
